@@ -1,0 +1,43 @@
+server:
+ port: 8080
+mybatis:
+ mapper-locations: # 所有的mapper映射文件
+ - classpath:mapping/*.xml
+spring:
+ application:
+   name: microcloud-provider-product
+ datasource:
+   type: com.alibaba.druid.pool.DruidDataSource # 配置当前要使用的数据源的操作类型
+   driver-class-name: com.mysql.cj.jdbc.Driver # 配置MySQL的驱动程序类
+   url: jdbc:mysql://localhost:3306/springcloud?serverTimezone=GMT%2B8 # 数据库连接地址
+   username: root # 数据库用户名
+   password: root # 数据库连接密码
+# security:
+#    user:
+#      name: admin  # 认证用户名
+#      password: enjoy  # 认证密码
+#      roles:
+#       - USER # 授权角色
+logging:
+  level:
+    cn.enjoy.mapper: debug
+
+# 配置eureka 将服务提供方注册到eureka中去
+eureka:
+  client:
+    serviceUrl:
+      #defaultZone: http://localhost:7001/eureka #这里要配置的和eurake地址一样 这是eurake没有配置密码的
+      #defaultZone: http://admin:enjoy@localhost:7001/eureka #这是eureka配置了密码的（注意高版本的）
+    defaultZone: http://admin:enjoy@eureka1:7001/eureka,http://admin:enjoy@eureka2:7001/eureka,http://admin:enjoy@eureka3:7001/eureka #多个eurake节点 最好全部节点都把服务注册一遍，这样才实现了高可用
+    instance:
+      instance-id: springCloud-provider-product
+      prefer-ip-address: true
+      lease-renewal-interval-in-seconds: 2 #设置心跳的时间间隔（默认是30秒）
+      lease-expiration-duration-in-seconds: 5 # 如果现在超过了5秒的间隔，就认为该服务端挂了（默认是90秒）
+
+info: #配置了这个在eureka的客户端中点击本服务链接才能出来东西
+  app.name: springcloud-provider-product
+  company.name: enjoy
+  build.artifactId: $project.artifactId$
+  build.modelVersion: $project.modelVersion$
+
